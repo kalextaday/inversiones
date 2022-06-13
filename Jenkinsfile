@@ -24,8 +24,7 @@ pipeline {
 		stage('Checkout') {
 			steps{
 				echo "------------>Checkout<------------"
-				checkout([$class: 'GitSCM', branches: [[name: 'main']], doGenerateSubmoduleConfigurations: false, extensions: [], gitTool: 'Git_Centos', submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHub_kalextaday', url: 'https://github.com/kalextaday/inversiones.git']]])
-				sh 'gradle clean'
+				checkout scm
 			}
 		}
 		
