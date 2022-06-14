@@ -30,6 +30,7 @@ pipeline {
 		stage('Unit Tests') {
         			steps{
         				echo "------------>Unit Tests<------------"
+        				chmod +x gradlew
         				sh './gradlew clean test --no-daemon'
         			}
         		}
