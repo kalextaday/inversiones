@@ -1,3 +1,4 @@
+@Library('ceiba-jenkins-library') _
 pipeline {
 	//where and how to execute the Pipeline
 	agent {
@@ -38,9 +39,15 @@ pipeline {
 		stage('Static Code Analysis') {
 			steps{
 				echo '------------>Static Code Analysis<------------'
+				sonarqubeMasQualityGatesP(sonarKey:'co.com.ceiba.adn:Inversiones-kevin.taday',
+                        sonarName:'CeibaADN-Inversiones[kevin.taday]',
+                        sonarPathProperties:'./sonar-project.properties')
+
+                /*
 				withSonarQubeEnv('Sonar') {
 					sh "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
 				}
+				*/
 			}
 		}
 		
@@ -54,7 +61,7 @@ pipeline {
 
 		stage('Deploy') {
             steps {
-                echo "------------>Build<------------"
+                echo "------------>Deploy<------------"
                 sh 'chmod +x gradlew'
                 sh './gradlew bootRun'
             }

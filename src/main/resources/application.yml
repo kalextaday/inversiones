@@ -17,8 +17,13 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://database-1.c1crlria7jb8.us-east-1.rds.amazonaws.com:3306/DBINVERSION
+    url: jdbc:mysql://database-1.c1crlria7jb8.us-east-1.rds.amazonaws.com:3306/DBINVERSION?serverTimezone=GMT-5
     username: root
     password: L1pxMZtZoLzz
     hikari:
-      poolName: pool
+      poolName: poolMysql
+      minimumIdle: 2
+      maximumPoolSize: 10
+      idleTimeout: 120000
+      connectionTimeout: 300000
+      leakDetectionThreshold: 300000
