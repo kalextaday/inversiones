@@ -43,11 +43,9 @@ pipeline {
                         sonarName:'CeibaADN-Inversiones[kevin.taday]',
                         sonarPathProperties:'./sonar-project.properties')
 
-                /*
 				withSonarQubeEnv('Sonar') {
 					sh "${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
 				}
-				*/
 			}
 		}
 		
@@ -62,8 +60,8 @@ pipeline {
 		stage('Deploy') {
             steps {
                 echo "------------>Deploy<------------"
-                sh 'chmod +x gradlew'
-                sh './gradlew bootRun'
+                //sh 'chmod +x gradlew'
+                //sh './gradlew bootRun'
             }
         }
 	}
