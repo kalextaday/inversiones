@@ -34,24 +34,7 @@ pipeline {
         				sh './gradlew clean test --no-daemon'
         			}
         		}
-		/*
-		stage('Compile') {
-			steps{
-				echo "------------>Compile<------------"
-				sh 'gradle --b ./build.gradle compileJava'
-			}
-		}
-		*/
-		
-		stage('Unit Tests And Coverage') {
-			steps{
-				echo "------------>Unit Tests<------------"
-				sh 'gradle --b ./build.gradle test'
-				junit '**/build/test-results/test/*.xml' //aggregate test results - JUnit
-			    sh 'gradle --b ./build.gradle jacocoTestReport'
-			}
-		}
-		
+
 		stage('Static Code Analysis') {
 			steps{
 				echo '------------>Static Code Analysis<------------'
@@ -64,7 +47,8 @@ pipeline {
 		stage('Build') {
 			steps {
 				echo "------------>Build<------------"
-				sh 'gradle build -x test'
+				sh 'chmod +x gradlew'
+				sh './gradlew build -x test'
 			}
 		}
 	}
