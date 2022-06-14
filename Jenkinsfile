@@ -12,7 +12,6 @@ pipeline {
 	//A section defining tools to auto-install and put on the PATH
 	tools {
 		jdk 'JDK8_Centos'
-		gradle 'Gradle-5.6.2'
 	}
 
 	triggers {
@@ -31,7 +30,7 @@ pipeline {
 		stage('Unit Tests') {
         			steps{
         				echo "------------>Unit Tests<------------"
-        				sh 'gradle --b ./build.gradle cleanTest test'
+        				sh './gradlew clean test --no-daemon'
         			}
         		}
 		/*
