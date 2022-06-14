@@ -8,7 +8,6 @@ import com.ceiba.inversiones.infraestructura.repositorio.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 public class UsuarioDaoAdaptador implements UsuarioPersistenciaPort {
 
@@ -44,7 +43,7 @@ public class UsuarioDaoAdaptador implements UsuarioPersistenciaPort {
     public UsuarioDto obtenerUsuarioPorIdentificacion(String identificacion) {
         List<Usuario> usuarios = usuarioRepositorio.obtenerUsuarioPorIdentificacion(identificacion);
 
-        if(usuarios.size()>0){
+        if(! usuarios.isEmpty()){
             Usuario usuario = usuarios.get(0);
             return UsuarioMapper.INSTANCE.usuarioToUsuarioDto(usuario);
         }
@@ -54,13 +53,10 @@ public class UsuarioDaoAdaptador implements UsuarioPersistenciaPort {
 
     @Override
     public UsuarioDto obtenerUsuarioPorId(Integer idUsuario) {
-        Optional<Usuario> opt = Optional.ofNullable(usuarioRepositorio.findById(idUsuario).get());
-
-        if(opt.isPresent()){
-            Usuario usuario = opt.get();
-            return UsuarioMapper.INSTANCE.usuarioToUsuarioDto(usuario);
+        Usuario usu = usuarioRepositorio.findById(idUsuario).orElse(null);
+        if(usu != null){
+            return UsuarioMapper.INSTANCE.usuarioToUsuarioDto(usu);
         }
-
         return null;
     }
 }

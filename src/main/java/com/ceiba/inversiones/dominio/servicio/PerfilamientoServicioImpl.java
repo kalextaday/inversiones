@@ -26,16 +26,14 @@ public class PerfilamientoServicioImpl implements PerfilamientoServicioPort {
     @Override
     public PerfilDto obtenerPerfil(String identificacionUsuario, List<PreguntasDto> preguntasRespondidas) {
 
-        this.calcularPerfil(preguntasRespondidas);
+        String perfil = this.calcularPerfil(preguntasRespondidas);
 
-        PerfilDto perfil = new PerfilDto(identificacionUsuario, this.calcularPerfil(preguntasRespondidas));
-
-        return perfil;
+        return new PerfilDto(identificacionUsuario, perfil);
     }
 
-    private String calcularPerfil(List<PreguntasDto> preguntasRespondidas){
+    public String calcularPerfil(List<PreguntasDto> preguntasRespondidas){
 
-        int sumaTotal = preguntasRespondidas.stream().mapToInt(pr -> pr.getPonderacion()).sum();
+        int sumaTotal = preguntasRespondidas.stream().mapToInt(PreguntasDto::getPonderacion).sum();
 
         if(sumaTotal >= TipoPerfil.AUDAZ.getMin()){
             return TipoPerfil.AUDAZ.getCodigo();

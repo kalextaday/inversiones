@@ -1,6 +1,5 @@
 package com.ceiba.inversiones.dominio.servicio;
 
-import com.ceiba.inversiones.aplicacion.response.BalanceResponse;
 import com.ceiba.inversiones.aplicacion.response.InversionResponse;
 import com.ceiba.inversiones.dominio.inversion.dto.InversionDto;
 import com.ceiba.inversiones.dominio.inversion.entidad.Inversion;
@@ -11,12 +10,14 @@ import com.ceiba.inversiones.dominio.operacion.dto.OperacionDto;
 import com.ceiba.inversiones.dominio.operacion.port.api.OperacionServicioPort;
 import com.ceiba.inversiones.dominio.usuario.dto.UsuarioDto;
 import com.ceiba.inversiones.dominio.usuario.port.api.UsuarioServicioPort;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-import java.util.Random;
 
+@Slf4j
 public class InversionServicioImpl implements InversionServicioPort {
+
+    private static final String OPERACION_EXITOSA = "INVERSION REALIZADA CORRECTAMENTE.";
 
     InversionPersistenciaPort inversionPersistenciaPort;
 
@@ -25,6 +26,9 @@ public class InversionServicioImpl implements InversionServicioPort {
 
     @Autowired
     OperacionServicioPort operacionServicioPort;
+
+    @Autowired
+    CalculosServicioImpl calculosServicioImpl;
 
     public InversionServicioImpl(InversionPersistenciaPort inversionPersistenciaPort) {
         this.inversionPersistenciaPort = inversionPersistenciaPort;
@@ -35,74 +39,40 @@ public class InversionServicioImpl implements InversionServicioPort {
         UsuarioDto usuarioDto = usuarioServicioPort.obtenerUsuarioPorIdentificacion(identificacionUsuario);
         OperacionDto operacionDto = operacionServicioPort.obtenerOperacionPorId(idOperacion);
 
-        InversionDto nuevaInversion = this.generarInversion(usuarioDto, operacionDto);
+        Double interes = calculosServicioImpl.calcularInteres();
+        Double montoFinal = calculosServicioImpl.calcularMontoTotal(interes, operacionDto.getMonto());
+
+        InversionDto nuevaInversion = this.generarInversion(usuarioDto, operacionDto, interes, montoFinal);
         InversionDto inversionGuardada = inversionPersistenciaPort.agregarInversion(nuevaInversion);
 
         InversionResponse inversionResponse = new InversionResponse(
                 identificacionUsuario,
                 String.valueOf(operacionDto.getMonto()),
-                String.valueOf(inversionGuardada.getInteres()),
-                String.valueOf(inversionGuardada.getMontoTotal())
+                String.valueOf(nuevaInversion.getInteres()),
+                String.valueOf(nuevaInversion.getMontoTotal())
         );
 
-        if(inversionGuardada.getIdInversion() > 0){
-            usuarioDto.setBalance(usuarioDto.getBalance() + inversionGuardada.getMontoTotal());
+       // if(inversionGuardada.getIdInversion() > 0){
+            usuarioDto.setBalance(usuarioDto.getBalance() + nuevaInversion.getMontoTotal());
 
             UsuarioDto usuarioActualizado = usuarioServicioPort.actualizarUsuario(usuarioDto);
 
-            if(usuarioActualizado.getIdUsuario() > 0){
+            //if(usuarioActualizado.getIdUsuario() > 0){
                 inversionResponse.setCodigo("0");
-                inversionResponse.setMensaje("INVERSION REALIZADA CORRECTAMENTE.");
-            }
-        }
+                inversionResponse.setMensaje(OPERACION_EXITOSA);
+            //}
+        //}
 
         return inversionResponse;
     }
 
     @Override
-    public Double calcularInteres(double cantidadParaInvertir) {
-        int min = 1;
-        int max = 10;
-
-        Random random = new Random();
-        int value = random.nextInt(max + min) + min;
-        boolean signo = random.nextBoolean();
-
-        //double interes = signo ? Double.valueOf(value) : Double.valueOf(value) * -1;
-
-        return signo ? Double.valueOf(value) : Double.valueOf(value) * -1;
-    }
-
-    @Override
-    public Double calcularMontoTotal(double cantidadParaInvertir, double interes) {
-
-        return cantidadParaInvertir + (cantidadParaInvertir * (interes/100));
-    }
-
-    /*
-    @Override
-    public BalanceResponse obtenerBalanceUsuario(String identificacionUsuario) {
-        UsuarioDto usuarioDto = usuarioServicioPort.obtenerUsuarioPorIdentificacion(identificacionUsuario);
-
-        List<InversionDto> inversionesRealizadas = inversionPersistenciaPort.obtenerInversionesPorIdUsuario(usuarioDto.getIdUsuario());
-        double balanceTotal =  inversionesRealizadas.stream()
-                                .mapToDouble(inv->inv.getMontoTotal()).sum();
-
-        BalanceResponse balance = new BalanceResponse();
-        balance.setIdentificacionUsuario(identificacionUsuario);
-        balance.setFecha(UtilFechas.formatearFecha(UtilFechas.ahora(), 1));
-        balance.setBalance(String.valueOf(balanceTotal));
-
-        return balance;
-    }
-     */
-
-    private InversionDto generarInversion(UsuarioDto usuarioDto, OperacionDto operacionDto){
+    public InversionDto generarInversion(UsuarioDto usuarioDto, OperacionDto operacionDto, Double interes, Double montoFinal){
         Inversion nuevaInversion = new Inversion();
         nuevaInversion.setIdUsuario(usuarioDto.getIdUsuario());
         nuevaInversion.setIdOperacion(operacionDto.getIdOperacion());
-        nuevaInversion.setInteres(calcularInteres(operacionDto.getMonto()));
-        nuevaInversion.setMontoTotal(calcularMontoTotal(operacionDto.getMonto(), nuevaInversion.getInteres()));
+        nuevaInversion.setInteres(interes);
+        nuevaInversion.setMontoTotal(montoFinal);
         nuevaInversion.setFecha(UtilFechas.ahora());
 
         return InversionMapper.INSTANCE.inversionToInversionDto(nuevaInversion);

@@ -8,6 +8,10 @@ import java.util.Date;
 
 public class UtilFechas {
 
+    private UtilFechas() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static Date getLastAccountingDay(String hour) throws ParseException {
         DateTime curr = new DateTime();
         DateTime last = curr.minusDays(1);

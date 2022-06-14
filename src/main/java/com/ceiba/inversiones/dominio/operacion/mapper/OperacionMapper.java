@@ -8,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper
 public abstract class OperacionMapper {
@@ -32,22 +33,12 @@ public abstract class OperacionMapper {
     public abstract Operacion operacionDtoToOperacion(OperacionDto operacionDto);
 
     public List<OperacionDto> operacionListToOperacionDtoList(List<Operacion> data) {
-        List<OperacionDto> result = new ArrayList<>();
 
-        data.forEach(item->{
-            result.add(this.operacionToOperacionDto(item));
-        });
-
-        return result;
+        return data.stream().map(item-> this.operacionToOperacionDto(item)).collect(Collectors.toList());
     }
 
     public List<Operacion> operacionDtoListToOperacionList(List<OperacionDto> data) {
-        List<Operacion> result = new ArrayList<>();
 
-        data.forEach(item->{
-            result.add(this.operacionDtoToOperacion(item));
-        });
-
-        return result;
+        return data.stream().map(item-> this.operacionDtoToOperacion(item)).collect(Collectors.toList());
     }
 }

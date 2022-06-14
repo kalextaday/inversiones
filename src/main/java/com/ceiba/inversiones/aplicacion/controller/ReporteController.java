@@ -18,9 +18,10 @@ public class ReporteController {
     private OperacionServicioPort operacionServicioPort;
 
     @GetMapping(value = "v1/obtenerResumenDiario", produces = "application/json")
-    public ResponseEntity obtenerResumenDiario() {
+    public ResponseEntity<List<ResumenOperacionDto>> obtenerResumenDiario() {
         List<ResumenOperacionDto> result = this.operacionServicioPort.obtenerResumenDiario();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok()
+                .body(result);
     }
 }

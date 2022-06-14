@@ -1,6 +1,5 @@
 package com.ceiba.inversiones.dominio.servicio;
 
-import com.ceiba.inversiones.aplicacion.response.BalanceResponse;
 import com.ceiba.inversiones.aplicacion.response.RetiroResponse;
 import com.ceiba.inversiones.dominio.inversion.port.api.InversionServicioPort;
 import com.ceiba.inversiones.dominio.operacion.dto.OperacionDto;
@@ -10,15 +9,20 @@ import com.ceiba.inversiones.dominio.operacion.port.api.OperacionServicioPort;
 import com.ceiba.inversiones.dominio.operacion.port.spi.OperacionPersistenciaPort;
 import com.ceiba.inversiones.dominio.usuario.dto.UsuarioDto;
 import com.ceiba.inversiones.dominio.usuario.port.api.UsuarioServicioPort;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.rmi.CORBA.Util;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class OperacionServicioImpl implements OperacionServicioPort {
+
+    private static final String RETIRO_EXITOSO = "RETIRO EXITOSO.";
+    private static final String FONDOS_INSUFICIENTES = "NO TIENE FONDOS DISPONIBLES PARA LA CANTIDAD SOLICITADA.";
+    private static final String EXCESO_RETIROS_PERMITIDOS = "NO PUEDE HACER MAS DE UN RETIRO AL DIA.";
 
     OperacionPersistenciaPort operacionPersistenciaPort;
 
@@ -65,14 +69,14 @@ public class OperacionServicioImpl implements OperacionServicioPort {
                     UsuarioDto usuarioActualizado = usuarioServicioPort.actualizarUsuario(usuarioDto);
 
                     if(usuarioActualizado.getIdUsuario() > 0){
-                        response.setMensaje("RETIRO EXITOSO.");
+                        response.setMensaje(RETIRO_EXITOSO);
                     }
                 }
             } else{
-                response.setMensaje("NO TIENE FONDOS DISPONIBLES PARA LA CANTIDAD SOLICITADA.");
+                response.setMensaje(FONDOS_INSUFICIENTES);
             }
         } else {
-            response.setMensaje("NO PUEDE HACER MAS DE UN RETIRO AL DIA.");
+            response.setMensaje(EXCESO_RETIROS_PERMITIDOS);
         }
 
         return response;
@@ -94,42 +98,40 @@ public class OperacionServicioImpl implements OperacionServicioPort {
 
             return this.generarResumenOperaciones(result);
         }catch(Exception ex){
-
+            log.error("Excepcion al obtener el Resumen Diario, error: {}",ex.getMessage());
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     private boolean validarUltimoRetiro(Integer idUsuario){
 
-        return operacionPersistenciaPort.retirosMenores1Dia(idUsuario).size()>0 ? false : true;
+        return operacionPersistenciaPort.retirosMenores1Dia(idUsuario).isEmpty();
     }
 
     private boolean validarFondos(UsuarioDto usuario, double montoARetirar){
-        //BalanceResponse balance = inversionServicioPort.obtenerBalanceUsuario(identificacionUsuario);
 
-        if(montoARetirar < usuario.getBalance()){
-            return true;
-        }
-        return false;
+        return montoARetirar <= usuario.getBalance();
     }
 
-    private List<ResumenOperacionDto> generarResumenOperaciones(List<OperacionDto> operaciones){
-        List<ResumenOperacionDto> resumen = operaciones.stream().map(op->{
-            UsuarioDto usuario = usuarioServicioPort.obtenerUsuarioPorId(op.getIdUsuario());
+    public List<ResumenOperacionDto> generarResumenOperaciones(List<OperacionDto> operaciones){
+        return operaciones
+                .stream()
+                .map(op->{
 
-            ResumenOperacionDto res = new ResumenOperacionDto();
-            res.setTipoOperacion(op.getTipoOperacion());
-            res.setEstatus(op.getEstatus());
-            res.setMonto(op.getMonto());
-            res.setFecha(op.getFecha());
-            res.setIdentificacion(usuario.getIdentificacion());
-            res.setNombres(usuario.getNombres());
+                    UsuarioDto usuario = usuarioServicioPort.obtenerUsuarioPorId(op.getIdUsuario());
 
-            return res;
-        }).collect(Collectors.toList());
+                    ResumenOperacionDto res = new ResumenOperacionDto();
+                    res.setTipoOperacion(op.getTipoOperacion());
+                    res.setEstatus(op.getEstatus());
+                    res.setMonto(op.getMonto());
+                    res.setFecha(op.getFecha());
+                    res.setIdentificacion(usuario.getIdentificacion());
+                    res.setNombres(usuario.getNombres());
 
+                    return res;
 
-        return resumen;
+                })
+                .collect(Collectors.toList());
     }
 }

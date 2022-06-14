@@ -2,7 +2,6 @@ package com.ceiba.inversiones.aplicacion.controller;
 
 import com.ceiba.inversiones.aplicacion.response.InversionResponse;
 import com.ceiba.inversiones.aplicacion.response.RetiroResponse;
-import com.ceiba.inversiones.dominio.inversion.dto.InversionDto;
 import com.ceiba.inversiones.dominio.inversion.port.api.InversionServicioPort;
 import com.ceiba.inversiones.dominio.operacion.dto.OperacionDto;
 import com.ceiba.inversiones.dominio.operacion.port.api.OperacionServicioPort;
@@ -21,11 +20,12 @@ public class InversionController {
     private InversionServicioPort inversionServicioPort;
 
     @PostMapping(value = "v1/invertir/{identificacion}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity invertir(@PathVariable String identificacion,
+    public ResponseEntity<OperacionDto> invertir(@PathVariable String identificacion,
                                    @RequestBody OperacionDto item) {
         OperacionDto result = this.operacionServicioPort.invertir(identificacion, item);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok()
+                .body(result);
     }
 
     @PostMapping(value = "v1/retirar/{identificacion}", consumes = "application/json", produces = "application/json")
@@ -33,13 +33,15 @@ public class InversionController {
                                                   @RequestBody OperacionDto item) {
         RetiroResponse result = this.operacionServicioPort.retirar(identificacion, item);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok()
+                .body(result);
     }
 
-    @PostMapping(value = "v1/operar/{identificacion}/{id_operacion}")
-    public ResponseEntity operar(@PathVariable String identificacion, @PathVariable Integer id_operacion) {
-        InversionResponse result = this.inversionServicioPort.operarInversion(identificacion, id_operacion);
+    @PostMapping(value = "v1/operar/{identificacion}/{idOperacion}")
+    public ResponseEntity<InversionResponse> operar(@PathVariable String identificacion, @PathVariable Integer idOperacion) {
+        InversionResponse result = this.inversionServicioPort.operarInversion(identificacion, idOperacion);
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok()
+                .body(result);
     }
 }

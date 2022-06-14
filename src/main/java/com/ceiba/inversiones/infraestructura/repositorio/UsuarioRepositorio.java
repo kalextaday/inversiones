@@ -12,10 +12,4 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Integer> {
 
     @Query("select l from Usuario l where l.identificacion= :identification ")
     List<Usuario> obtenerUsuarioPorIdentificacion(@Param("identification") String identification);
-
-    /*
-    @Modifying
-    @Query("update Usuario u set u.phone = :phone where u.id = :id")
-    void editar(@Param(value = "id") long id, @Param(value = "phone") String phone);
-     */
 }

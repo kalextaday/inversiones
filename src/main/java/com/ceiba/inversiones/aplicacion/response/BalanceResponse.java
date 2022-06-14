@@ -1,6 +1,5 @@
 package com.ceiba.inversiones.aplicacion.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

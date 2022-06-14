@@ -1,9 +1,10 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.8.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'org.springframework.boot' version '2.3.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
 	id 'jacoco'
 	id 'org.flywaydb.flyway' version '5.2.1'
+	id "org.sonarqube" version "2.7"
 }
 
 springBoot {
@@ -12,7 +13,7 @@ springBoot {
 
 group = 'com.ceiba'
 version = '0.0.1'
-sourceCompatibility = '1.8'
+
 compileJava {options.encoding = "ISO-8859-1"}
 
 
@@ -23,10 +24,9 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-	//implementation 'org.projectlombok:lombok:1.18.12'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
 	runtimeOnly 'com.h2database:h2'
@@ -41,6 +41,7 @@ dependencies {
 
 	implementation 'joda-time:joda-time:2.10.14'
 
+	//implementation 'org.projectlombok:lombok:1.18.12'
 	compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 }
