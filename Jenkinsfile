@@ -12,6 +12,7 @@ pipeline {
 	//A section defining tools to auto-install and put on the PATH
 	tools {
 		jdk 'JDK8_Centos'
+		gradle 'Gradle4.5_Centos'
 	}
 
 	triggers {
@@ -26,13 +27,21 @@ pipeline {
 				checkout scm
 			}
 		}
-		
+
+		stage('Unit Tests') {
+        			steps{
+        				echo "------------>Unit Tests<------------"
+        				sh 'gradle --b ./build.gradle cleanTest test'
+        			}
+        		}
+		/*
 		stage('Compile') {
 			steps{
 				echo "------------>Compile<------------"
 				sh 'gradle --b ./build.gradle compileJava'
 			}
 		}
+		*/
 		
 		stage('Unit Tests And Coverage') {
 			steps{
