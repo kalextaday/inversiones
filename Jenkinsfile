@@ -56,14 +56,6 @@ pipeline {
 				sh './gradlew build -x test'
 			}
 		}
-
-		stage('Deploy') {
-            steps {
-                echo "------------>Deploy<------------"
-                //sh 'chmod +x gradlew'
-                //sh './gradlew bootRun'
-            }
-        }
 	}
 	
 	post {
