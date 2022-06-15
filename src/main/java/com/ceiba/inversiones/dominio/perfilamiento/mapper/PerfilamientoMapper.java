@@ -33,13 +33,4 @@ public abstract class PerfilamientoMapper {
         return result;
     }
 
-    public List<Perfilamiento> preguntasDtoListToPerfilamientoList(List<PreguntasDto> data) {
-        List<Perfilamiento> result = new ArrayList<>();
-
-        data.forEach(item->{
-            result.add(this.preguntasDtoToPerfilamiento(item));
-        });
-
-        return result;
-    }
 }

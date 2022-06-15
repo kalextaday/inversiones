@@ -1,6 +1,6 @@
 package com.ceiba.inversiones.infraestructura.adaptador;
 
-import com.ceiba.inversiones.dominio.usuario.UsuarioMapper;
+import com.ceiba.inversiones.dominio.usuario.mapper.UsuarioMapper;
 import com.ceiba.inversiones.dominio.usuario.dto.UsuarioDto;
 import com.ceiba.inversiones.dominio.usuario.entidad.Usuario;
 import com.ceiba.inversiones.dominio.usuario.port.spi.UsuarioPersistenciaPort;
@@ -8,6 +8,7 @@ import com.ceiba.inversiones.infraestructura.repositorio.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Objects;
 
 public class UsuarioDaoAdaptador implements UsuarioPersistenciaPort {
 
@@ -32,8 +33,11 @@ public class UsuarioDaoAdaptador implements UsuarioPersistenciaPort {
     public boolean eliminarUsuario(UsuarioDto usuarioDto) {
         try{
             Usuario usuario = UsuarioMapper.INSTANCE.usuarioDtoToUsuario(usuarioDto);
-            usuarioRepositorio.delete(usuario);
-            return true;
+            if(Objects.nonNull(usuario)){
+                usuarioRepositorio.delete(usuario);
+                return true;
+            }
+            return false;
         }catch(Exception ex){
             return false;
         }

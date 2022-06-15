@@ -41,13 +41,4 @@ public abstract class InversionMapper {
         return result;
     }
 
-    public List<Inversion> inversionDtoListToInversionList(List<InversionDto> data) {
-        List<Inversion> result = new ArrayList<>();
-
-        data.forEach(item->{
-            result.add(this.inversionDtoToInversion(item));
-        });
-
-        return result;
-    }
 }

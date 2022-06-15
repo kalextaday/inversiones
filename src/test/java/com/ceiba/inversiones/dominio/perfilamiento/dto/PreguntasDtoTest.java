@@ -5,13 +5,10 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 public class PreguntasDtoTest {
 
     @Test
-    void testCrearAportacionExitoso() throws ParseException {
+    void testCrearPreguntasExitoso() {
 
         PreguntasDto preguntasDto = new PreguntasDtoDataBuilder()
                 .conPregunta("¿Sabes de inversiones?")

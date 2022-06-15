@@ -17,13 +17,7 @@ public class InversionDaoAdaptador implements InversionPersistenciaPort {
     @Override
     public InversionDto agregarInversion(InversionDto inversionDto) {
         try{
-            Inversion inversionNueva = new Inversion();
-            inversionNueva.setFecha(inversionDto.getFecha());
-            inversionNueva.setIdOperacion(inversionDto.getIdOperacion());
-            inversionNueva.setIdUsuario(inversionDto.getIdUsuario());
-            inversionNueva.setMontoTotal(inversionDto.getMontoTotal());
-            inversionNueva.setInteres(inversionDto.getInteres());
-
+            Inversion inversionNueva = intanciarNuevaInversion(inversionDto);
             Inversion inversionGuardada = inversionRepositorio.save(inversionNueva);
             return InversionMapper.INSTANCE.inversionToInversionDto(inversionGuardada);
         }catch(Exception ex){
@@ -38,5 +32,17 @@ public class InversionDaoAdaptador implements InversionPersistenciaPort {
         List<Inversion> result = inversionRepositorio.obtenerInversionesPorIdUsuario(idUsuario);
 
         return InversionMapper.INSTANCE.inversionListToInversionDtoList(result);
+    }
+
+    public Inversion intanciarNuevaInversion(InversionDto inversionDto){
+
+        Inversion inversionNueva = new Inversion();
+        inversionNueva.setFecha(inversionDto.getFecha());
+        inversionNueva.setIdOperacion(inversionDto.getIdOperacion());
+        inversionNueva.setIdUsuario(inversionDto.getIdUsuario());
+        inversionNueva.setMontoTotal(inversionDto.getMontoTotal());
+        inversionNueva.setInteres(inversionDto.getInteres());
+
+        return inversionNueva;
     }
 }

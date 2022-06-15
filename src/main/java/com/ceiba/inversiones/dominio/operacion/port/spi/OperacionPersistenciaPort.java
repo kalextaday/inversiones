@@ -15,5 +15,4 @@ public interface OperacionPersistenciaPort {
 
     List<OperacionDto> obtenerOperacionPorFechas(Date min, Date max);
 
-    List<OperacionDto> obtenerOperacionesPorTipo(String tipoOperacion);
 }

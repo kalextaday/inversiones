@@ -43,7 +43,8 @@ public class InversionServicioImpl implements InversionServicioPort {
         Double montoFinal = calculosServicioImpl.calcularMontoTotal(interes, operacionDto.getMonto());
 
         InversionDto nuevaInversion = this.generarInversion(usuarioDto, operacionDto, interes, montoFinal);
-        InversionDto inversionGuardada = inversionPersistenciaPort.agregarInversion(nuevaInversion);
+
+        inversionPersistenciaPort.agregarInversion(nuevaInversion);
 
         InversionResponse inversionResponse = new InversionResponse(
                 identificacionUsuario,
@@ -52,16 +53,12 @@ public class InversionServicioImpl implements InversionServicioPort {
                 String.valueOf(nuevaInversion.getMontoTotal())
         );
 
-       // if(inversionGuardada.getIdInversion() > 0){
-            usuarioDto.setBalance(usuarioDto.getBalance() + nuevaInversion.getMontoTotal());
+        usuarioDto.setBalance(usuarioDto.getBalance() + nuevaInversion.getMontoTotal());
 
-            UsuarioDto usuarioActualizado = usuarioServicioPort.actualizarUsuario(usuarioDto);
+        usuarioServicioPort.actualizarUsuario(usuarioDto);
 
-            //if(usuarioActualizado.getIdUsuario() > 0){
-                inversionResponse.setCodigo("0");
-                inversionResponse.setMensaje(OPERACION_EXITOSA);
-            //}
-        //}
+        inversionResponse.setCodigo("0");
+        inversionResponse.setMensaje(OPERACION_EXITOSA);
 
         return inversionResponse;
     }

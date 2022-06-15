@@ -8,7 +8,6 @@ import com.ceiba.inversiones.dominio.operacion.port.spi.OperacionPersistenciaPor
 import com.ceiba.inversiones.infraestructura.repositorio.OperacionRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -49,9 +48,4 @@ public class OperacionDaoAdaptador implements OperacionPersistenciaPort {
         return OperacionMapper.INSTANCE.operacionListToOperacionDtoList(result);
     }
 
-    @Override
-    public List<OperacionDto> obtenerOperacionesPorTipo(String tipoOperacion) {
-
-        return Collections.emptyList();
-    }
 }

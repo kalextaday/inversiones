@@ -6,7 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,11 +33,7 @@ public abstract class OperacionMapper {
 
     public List<OperacionDto> operacionListToOperacionDtoList(List<Operacion> data) {
 
-        return data.stream().map(item-> this.operacionToOperacionDto(item)).collect(Collectors.toList());
+        return data.stream().map(this::operacionToOperacionDto).collect(Collectors.toList());
     }
 
-    public List<Operacion> operacionDtoListToOperacionList(List<OperacionDto> data) {
-
-        return data.stream().map(item-> this.operacionDtoToOperacion(item)).collect(Collectors.toList());
-    }
 }
