@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin({"http://localhost:4200"})
 public class UsuarioController {
 
     @Autowired
@@ -30,6 +33,14 @@ public class UsuarioController {
                 .body(result);
     }
 
+    @GetMapping(value = "v1/consultar")
+    public ResponseEntity<List<UsuarioDto>> consultar() {
+        List<UsuarioDto> result = this.usuarioServicioPort.consultar();
+
+        return ResponseEntity.ok()
+                .body(result);
+    }
+
     @PutMapping(value = "v1/actualizar")
     public ResponseEntity<UsuarioDto> actualizar(@RequestBody UsuarioDto item) {
         UsuarioDto result = this.usuarioServicioPort.actualizarUsuario(item);
@@ -38,7 +49,7 @@ public class UsuarioController {
                 .body(result);
     }
 
-    @GetMapping(value = "v1/eliminar/{identificacion}")
+    @DeleteMapping(value = "v1/eliminar/{identificacion}")
     public ResponseEntity<Boolean> eliminar(@PathVariable String identificacion) {
         boolean result = this.usuarioServicioPort.eliminarUsuario(identificacion);
 

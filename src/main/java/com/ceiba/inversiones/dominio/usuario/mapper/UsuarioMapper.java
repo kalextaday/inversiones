@@ -6,6 +6,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mapper
 public abstract class UsuarioMapper {
 
@@ -26,5 +29,15 @@ public abstract class UsuarioMapper {
     @Mapping(source = "usuarioDto.perfil",                    target = "perfil")
     @Mapping(source = "usuarioDto.balance",                    target = "balance")
     public abstract Usuario usuarioDtoToUsuario(UsuarioDto usuarioDto);
+
+    public List<UsuarioDto> usuarioListToUsuarioDtoList(List<Usuario> data) {
+        List<UsuarioDto> result = new ArrayList<>();
+
+        data.forEach(item->{
+            result.add(this.usuarioToUsuarioDto(item));
+        });
+
+        return result;
+    }
 
 }

@@ -63,4 +63,9 @@ public class UsuarioDaoAdaptador implements UsuarioPersistenciaPort {
         }
         return null;
     }
+
+    @Override
+    public List<UsuarioDto> obtenerTodos() {
+        return UsuarioMapper.INSTANCE.usuarioListToUsuarioDtoList(usuarioRepositorio.findAll());
+    }
 }

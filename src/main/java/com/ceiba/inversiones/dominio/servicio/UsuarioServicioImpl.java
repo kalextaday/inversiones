@@ -5,6 +5,8 @@ import com.ceiba.inversiones.dominio.usuario.dto.UsuarioDto;
 import com.ceiba.inversiones.dominio.usuario.port.api.UsuarioServicioPort;
 import com.ceiba.inversiones.dominio.usuario.port.spi.UsuarioPersistenciaPort;
 
+import java.util.List;
+
 
 public class UsuarioServicioImpl implements UsuarioServicioPort {
 
@@ -54,5 +56,11 @@ public class UsuarioServicioImpl implements UsuarioServicioPort {
         balance.setBalance(String.valueOf(usuarioDto.getBalance()));
 
         return balance;
+    }
+
+    @Override
+    public List<UsuarioDto> consultar() {
+
+        return usuarioPersistenciaPort.obtenerTodos();
     }
 }

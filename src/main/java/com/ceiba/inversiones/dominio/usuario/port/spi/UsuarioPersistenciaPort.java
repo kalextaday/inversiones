@@ -2,6 +2,8 @@ package com.ceiba.inversiones.dominio.usuario.port.spi;
 
 import com.ceiba.inversiones.dominio.usuario.dto.UsuarioDto;
 
+import java.util.List;
+
 public interface UsuarioPersistenciaPort {
 
     UsuarioDto agregarUsuario(UsuarioDto usuarioDto);
@@ -13,4 +15,6 @@ public interface UsuarioPersistenciaPort {
     UsuarioDto obtenerUsuarioPorIdentificacion(String identificacion);
 
     UsuarioDto obtenerUsuarioPorId(Integer idUsuario);
+
+    List<UsuarioDto> obtenerTodos();
 }
